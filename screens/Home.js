@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -12,32 +12,11 @@ import {globalStyles} from '../styles/global.js';
 import Card from '../shared/Card';
 import ReviewForm from './ReviewForm';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+//& states
+import {connect} from 'react-redux';
 
-export default function Home({navigation}) {
+function Home({navigation, reviews}) {
   const [openModel, setOpenModel] = useState(false);
-  const [reviews, setReviews] = useState([
-    {
-      title: 'Zelda, Breath of Fresh Air',
-      rating: 5,
-      body: 'lorem ipsum',
-      key: '1',
-    },
-    {
-      title: 'Gotta Catch Them All (again)',
-      rating: 4,
-      body: 'lorem ipsum',
-      key: '2',
-    },
-    {title: 'Not So "Final" Fantasy', rating: 3, body: 'lorem ipsum', key: '3'},
-  ]);
-
-  const addReview = (review) => {
-    review.key = Math.random().toString();
-    setReviews((currentReviews) => {
-      return [review, ...currentReviews];
-    });
-    setOpenModel(false);
-  };
 
   return (
     <View style={globalStyles.container}>
@@ -49,7 +28,7 @@ export default function Home({navigation}) {
             style={{...styles.modalToggle, ...styles.modalClose}}
             onPress={() => setOpenModel(false)}
           />
-          <ReviewForm addReview={addReview} />
+          <ReviewForm />
         </View>
       </Modal>
 
@@ -73,6 +52,14 @@ export default function Home({navigation}) {
     </View>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    reviews: state.reviews,
+  };
+};
+
+export default connect(mapStateToProps)(Home);
 
 const styles = StyleSheet.create({
   modalToggle: {
